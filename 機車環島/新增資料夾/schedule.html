@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📅 詳細行程 - 青春環島</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 行程時間軸專用樣式 */
+        .day-block {
+            border-left: 8px solid var(--accent);
+            position: relative;
+        }
+        .add-item-form {
+            background: #fdfaf6;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 1px dashed #e67e22;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .add-item-form input {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        .input-time { width: 80px; }
+        .input-todo { flex: 1; min-width: 150px; }
+        .add-sub-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* 模仿圖片中的時間軸條目 */
+        .timeline-container {
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            padding: 6px 0;
+            border-bottom: 1px dashed #f0f0f0;
+        }
+        .time-badge {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 15px;
+            white-space: nowrap;
+        }
+        .todo-content {
+            flex: 1;
+            font-size: 0.95rem;
+            color: #333;
+            line-height: 1.4;
+        }
+        .del-item-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 5px;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html">🏠 首頁</a>
+    <a href="/新增資料夾/schedule.html" class="active">📅 行程</a>
+    <a href="hotel.html">🏨 住宿</a>
+    <a href="food.html">😋 美食</a>
+    <a href="checklist.html">🎒 裝備</a>
+    <a href="notes.html">⚠️ 注意</a>
+</nav>
+
+<div class="container">
+    <h2 style="text-align: center; color: var(--primary); margin-bottom: 30px;">🏍️ 6/22 - 6/27 環島時間軸規劃</h2>
+
+    <!-- ================= Day 1 ================= -->
+    <div class="day-block">
+        <h3 class="day-title">Day 1 <span class="date-label">6/22 (一)</span></h3>
+        <div class="route-info">📍 元智大學 ➔ 台中 (經台三線)</div>
+        
+        <!-- 動態時間軸顯示區 -->
+        <div class="timeline-container" id="timeline-day1"></div>
+        
+        <!-- 新增行程小表單 -->
+        <div class="add-item-form">
+            <input type="text" class="input-time" id="time-day1" placeholder="09:00">
+            <input type="text" class="input-todo" id="todo-day1" placeholder="例：元智大學出發 / 經台三線">
+            <button class="add-sub-btn" onclick="addTimelineItem('day1')">➕ 加入</button>
+        </div>
+    </div>
+
+    <!-- ================= Day 2 ================= -->
+    <div class="day-block">
+        <h3 class="day-title">Day 2 <span class="date-label">6/23 (二)</span></h3>
+        <div class="route-info">📍 台中 ➔ 台南 (挑戰西極點)</div>
+        <div class="timeline-container" id="timeline-day2"></div>
+        <div class="add-item-form">
+            <input type="text" class="input-time" id="time-day2" placeholder="12:00">
+            <input type="text" class="input-todo" id="todo-day2" placeholder="例：國聖燈塔-極西點拍照">
+            <button class="add-sub-btn" onclick="addTimelineItem('day2')">➕ 加入</button>
+        </div>
+    </div>
+
+    <!-- ================= Day 3 ================= -->
+    <div class="day-block">
+        <h3 class="day-title">Day 3 <span class="date-label">6/24 (三)</span></h3>
+        <div class="route-info">📍 台南 ➔ 墾丁 (挑戰南極點)</div>
+        <div class="timeline-container" id="timeline-day3"></div>
+        <div class="add-item-form">
+            <input type="text" class="input-time" id="time-day3" placeholder="14:00">
+            <input type="text" class="input-todo" id="todo-day3" placeholder="例：鵝鑾鼻燈塔（學士服大合照）">
+            <button class="add-sub-btn" onclick="addTimelineItem('day3')">➕ 加入</button>
+        </div>
+    </div>
+
+    <!-- ================= Day 4 ================= -->
+    <div class="day-block">
+        <h3 class="day-title">Day 4 <span class="date-label">6/25 (四)</span></h3>
+        <div class="route-info">📍 墾丁 ➔ 台東 / 花蓮</div>
+        <div class="timeline-container" id="timeline-day4"></div>
+        <div class="add-item-form">
+            <input type="text" class="input-time" id="time-day4" placeholder="17:00">
+            <input type="text" class="input-todo" id="todo-day4" placeholder="例：多良車站（可停可不停）">
+            <button class="add-sub-btn" onclick="addTimelineItem('day4')">➕ 加入</button>
+        </div>
+    </div>
+
+    <!-- ================= Day 5 ================= -->
+    <div class="day-block">
+        <h3 class="day-title">Day 5 <span class="date-label">6/26 (五)</span></h3>
+        <div class="route-info">📍 花蓮 ➔ 羅東 (挑戰東極點)</div>
+        <div class="timeline-container" id="timeline-day5"></div>
+        <div class="add-item-form">
+            <input type="text" class="input-time" id="time-day5" placeholder="12:00">
+            <input type="text" class="input-todo" id="todo-day5" placeholder="例：清水斷崖不開放不勉強停靠">
+            <button class="add-sub-btn" onclick="addTimelineItem('day5')">➕ 加入</button>
+        </div>
+    </div>
+
+    <!-- ================= Day 6 ================= -->
+    <div class="day-block">
+        <h3 class="day-title">Day 6 <span class="date-label">6/27 (六)</span></h3>
+        <div class="route-info">📍 羅東 ➔ 元智大學 (挑戰北極點)</div>
+        <div class="timeline-container" id="timeline-day6"></div>
+        <div class="add-item-form">
+            <input type="text" class="input-time" id="time-day6" placeholder="17:00">
+            <input type="text" class="input-todo" id="todo-day6" placeholder="例：富貴角燈塔成功！騎回元智">
+            <button class="add-sub-btn" onclick="addTimelineItem('day6')">➕ 加入</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- 軌跡按鈕與側欄 -->
+<div class="floating-cap" onclick="toggleTrack()">
+    <img src="https://cdn-icons-png.flaticon.com/512/3074/3074058.png" alt="學士帽"><span>軌跡</span>
+</div>
+<div class="track-overlay" id="trackOverlay">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="color: #f39c12; margin: 0;">🗺️ 我們的軌跡</h3>
+        <span style="font-size:2rem; cursor:pointer;" onclick="toggleTrack()">&times;</span>
+    </div>
+    <div class="milestone-item"><h4>⬅️ 西：國聖燈塔</h4><p style="font-size:0.8rem;color:#888;">尚未抵達</p></div>
+    <div class="milestone-item has-photo">
+        <h4>⬇️ 南：鵝鑾鼻燈塔</h4>
+        <img src="S__20799610_0.jpg" class="photo-preview">
+        <p style="font-size:0.8rem;color:#2ecc71;">✅ 已解鎖大合照</p>
+    </div>
+    <div class="milestone-item"><h4>➡️ 東：三貂角燈塔</h4><p style="font-size:0.8rem;color:#888;">尚未抵達</p></div>
+    <div class="milestone-item"><h4>⬆️ 北：富貴角燈塔</h4><p style="font-size:0.8rem;color:#888;">尚未抵達</p></div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    // 網頁載入時渲染所有天數的行程
+    window.onload = function() {
+        const days = ['day1', 'day2', 'day3', 'day4', 'day5', 'day6'];
+        days.forEach(day => displayTimeline(day));
+    };
+
+    // 新增行程條目
+    function addTimelineItem(dayKey) {
+        const timeInput = document.getElementById(`time-${dayKey}`);
+        const todoInput = document.getElementById(`todo-${dayKey}`);
+        
+        const time = timeInput.value.trim();
+        const todo = todoInput.value.trim();
+
+        if (!time || !todo) {
+            alert('時間和行程內容都要填寫喔！');
+            return;
+        }
+
+        const newItem = {
+            id: Date.now(),
+            time: time,
+            todo: todo
+        };
+
+        // 讀取該天現有的行程
+        let dayRecords = JSON.parse(localStorage.getItem(`schedule_${dayKey}`)) || [];
+        dayRecords.push(newItem);
+
+        // 💡 關鍵功能：自動按照時間從小到大排序 (例如 09:00 -> 11:30 -> 13:00)
+        dayRecords.sort((a, b) => a.time.localeCompare(b.time));
+
+        // 存回本地儲存空間
+        localStorage.setItem(`schedule_${dayKey}`, JSON.stringify(dayRecords));
+
+        // 清空輸入框並重新渲染
+        timeInput.value = '';
+        todoInput.value = '';
+        displayTimeline(dayKey);
+    }
+
+    // 渲染特定天數的時間軸
+    function displayTimeline(dayKey) {
+        const container = document.getElementById(`timeline-${dayKey}`);
+        container.innerHTML = '';
+
+        let dayRecords = JSON.parse(localStorage.getItem(`schedule_${dayKey}`)) || [];
+
+        if (dayRecords.length === 0) {
+            container.innerHTML = `<p style="color:#aaa; font-size:0.85rem; font-style:italic;">暫無詳細時間表，請於下方新增...</p>`;
+            return;
+        }
+
+        dayRecords.forEach(item => {
+            container.innerHTML += `
+                <div class="timeline-item" id="item-${item.id}">
+                    <span class="time-badge">${item.time}</span>
+                    <div class="todo-content">${item.todo}</div>
+                    <button class="del-item-btn" onclick="deleteTimelineItem('${dayKey}', ${item.id})">&times;</button>
+                </div>
+            `;
+        });
+    }
+
+    // 刪除特定行程
+    function deleteTimelineItem(dayKey, itemId) {
+        let dayRecords = JSON.parse(localStorage.getItem(`schedule_${dayKey}`)) || [];
+        dayRecords = dayRecords.filter(item => item.id !== itemId);
+        localStorage.setItem(`schedule_${dayKey}`, JSON.stringify(dayRecords));
+        displayTimeline(dayKey);
+    }
+</script>
+</body>
+</html>
