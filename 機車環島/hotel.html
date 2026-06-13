@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏨 住宿安排 - 青春環島</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 新增表單的專用樣式 */
+        .add-form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px dashed var(--hotel-color);
+        }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: var(--primary); }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit;
+        }
+        .submit-btn {
+            background: var(--hotel-color); color: white; border: none; padding: 10px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s;
+        }
+        .submit-btn:hover { opacity: 0.9; }
+        .delete-btn {
+            background: #ff7675; color: white; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.8rem; cursor: pointer; float: right;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html">🏠 首頁</a>
+    <a href="schedule.html">📅 行程</a>
+    <a href="hotel.html" class="active">🏨 住宿</a>
+    <a href="food.html">😋 美食</a>
+    <a href="checklist.html">🎒 裝備</a>
+    <a href="notes.html">⚠️ 注意</a>
+</nav>
+
+<div class="container">
+    
+    <div class="add-form">
+        <h3 style="margin-top:0; color: var(--hotel-color);">➕ 新增自訂住宿備忘</h3>
+        <div class="form-group">
+            <label>日期/天數 (例如: D2 5/30 或 自訂)</label>
+            <input type="text" id="hotelDay" placeholder="Ex: D2 5/30 台南">
+        </div>
+        <div class="form-group">
+            <label>飯店/民宿名稱與區域</label>
+            <input type="text" id="hotelName" placeholder="Ex: 汽車旅館 / 神農街附近">
+        </div>
+        <div class="form-group">
+            <label>備註事項 (電話、入住時間或機車停放)</label>
+            <textarea id="hotelNote" rows="2" placeholder="Ex: 老闆說機車可以停在一樓大廳旁。"></textarea>
+        </div>
+        <button class="submit-btn" onclick="addHotel()">確認新增 🏨</button>
+    </div>
+
+    <div id="hotelContainer">
+        <div class="day-block hotel-style">
+            <h3 class="day-title">D1 5/29 <span class="date-label">台中住宿</span></h3>
+            <div class="hotel-info">🏨 推薦區域：逢甲夜市周邊</div>
+            <p>💡 備註：找有附設機車停車位或附近好停機車的背包客棧，晚上逛夜市方便。</p>
+        </div>
+        <div class="day-block hotel-style">
+            <h3 class="day-title">D2 5/30 <span class="date-label">台南住宿</span></h3>
+            <div class="hotel-info">🏨 推薦區域：中西區 或 安平區</div>
+            <p>💡 備註：台南小巷弄多，建議選擇有機車專屬停車場的民宿。</p>
+        </div>
+        <div class="day-block hotel-style">
+            <h3 class="day-title">D3 5/31 <span class="date-label">墾丁住宿</span></h3>
+            <div class="hotel-info">🏨 推薦區域：恆春古城</div>
+            <p>💡 備註：住恆春古城相對安靜且性價比高，好停機車。</p>
+        </div>
+    </div>
+    
+    <div id="customHotelContainer"></div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    // 網頁載入時自動讀取之前存的住宿
+    window.onload = function() {
+        displayCustomHotels();
+    };
+
+    function addHotel() {
+        const day = document.getElementById('hotelDay').value;
+        const name = document.getElementById('hotelName').value;
+        const note = document.getElementById('hotelNote').value;
+
+        if (!day || !name) {
+            alert('請至少填寫「日期」與「飯店名稱」喔！');
+            return;
+        }
+
+        const newHotel = { day, name, note, id: Date.now() };
+
+        // 從 localStorage 拿出現有的陣列，沒有的話就建立新陣列
+        let hotels = JSON.parse(localStorage.getItem('myHotels')) || [];
+        hotels.push(newHotel);
+        localStorage.setItem('myHotels', JSON.stringify(hotels));
+
+        // 清空輸入框
+        document.getElementById('hotelDay').value = '';
+        document.getElementById('hotelName').value = '';
+        document.getElementById('hotelNote').value = '';
+
+        displayCustomHotels();
+    }
+
+    function displayCustomHotels() {
+        const container = document.getElementById('customHotelContainer');
+        container.innerHTML = '';
+        let hotels = JSON.parse(localStorage.getItem('myHotels')) || [];
+
+        hotels.forEach(hotel => {
+            container.innerHTML += `
+                <div class="day-block hotel-style" id="hotel-${hotel.id}">
+                    <button class="delete-btn" onclick="deleteHotel(${hotel.id})">刪除</button>
+                    <h3 class="day-title">${hotel.day}</h3>
+                    <div class="hotel-info">🏨 ${hotel.name}</div>
+                    <p>💡 備註：${hotel.note || '無'}</p>
+                </div>
+            `;
+        });
+    }
+
+    function deleteHotel(id) {
+        let hotels = JSON.parse(localStorage.getItem('myHotels')) || [];
+        hotels = hotels.filter(hotel => hotel.id !== id);
+        localStorage.setItem('myHotels', JSON.stringify(hotels));
+        displayCustomHotels();
+    }
+</script>
+</body>
+</html>
